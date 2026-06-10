@@ -1,0 +1,50 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: 'Press Start 2P', monospace;
+}
+
+#crt {
+  position: relative;
+  display: inline-block;
+  border: 4px solid #555555;
+  box-shadow: 0 0 30px #0000AA, 0 0 60px rgba(0,0,170,0.3);
+}
+
+#crt::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.1) 3px,
+    rgba(0,0,0,0.1) 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+#game {
+  display: block;
+  width: 960px;
+  height: 600px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+#controls {
+  margin-top: 10px;
+  display: flex;
+  gap: 20px;
+  color: #555555;
+  font-size: 8px;
+  font-family: 'Press Start 2P', monospace;
+}
