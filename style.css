@@ -7,17 +7,19 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'VT323', monospace;
+  font-weight: 400;
+  font-style: normal;
 }
 
-#crt {
+#screen {
   position: relative;
   display: inline-block;
   border: 4px solid #555555;
   box-shadow: 0 0 30px #0000AA, 0 0 60px rgba(0,0,170,0.3);
 }
 
-#crt::after {
+#screen::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -29,7 +31,7 @@ body {
     rgba(0,0,0,0.1) 4px
   );
   pointer-events: none;
-  z-index: 10;
+  z-index: 20;
 }
 
 #game {
@@ -40,11 +42,146 @@ body {
   image-rendering: crisp-edges;
 }
 
+/* ── Overlay ──────────────────────────────────────────────────────── */
+#overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  font-family: 'VT323', monospace;
+  font-weight: 400;
+  font-style: normal;
+  overflow: hidden;
+}
+
+#ui-screen {
+  position: absolute;
+  inset: 0;
+}
+
+#ui-hud {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 120px;
+}
+
+/* ── Blink ─────────────────────────────────────────────────────────── */
+@keyframes blink { 50% { opacity: 0; } }
+.blink { animation: blink 0.55s step-end infinite; }
+
+/* ── Title screen ──────────────────────────────────────────────────── */
+.ui-title-wrap {
+  position: absolute;
+  inset: 0 0 120px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ui-title-box {
+  background: #0000AA;
+  border: 4px solid #55FFFF;
+  padding: 24px 36px;
+  text-align: center;
+  max-width: 880px;
+  width: 90%;
+}
+.t-main     { font-size: 64px; color: #FFFF55; line-height: 1; }
+.t-sub      { font-size: 80px; color: #55FFFF; line-height: 1; }
+.t-desc     { font-size: 26px; color: #AAAAAA; margin: 10px 0 0; }
+.t-start    { font-size: 32px; color: #55FF55; margin-top: 14px; }
+.t-controls { font-size: 22px; color: #AAAAAA; margin-top: 10px; }
+
+/* ── HUD bar ───────────────────────────────────────────────────────── */
+.ui-hud-bar {
+  height: 120px;
+  background: #000000;
+  border-top: 3px solid #555555;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 18px;
+  gap: 12px;
+}
+.hud-l       { display: flex; flex-direction: column; min-width: 180px; }
+.hud-lvname  { font-size: 28px; color: #FFFFFF; line-height: 1.1; }
+.hud-lvsub   { font-size: 18px; color: #AAAAAA; line-height: 1.1; }
+.hud-files   { display: flex; gap: 14px; flex: 1; justify-content: center; align-items: center; flex-wrap: wrap; }
+.hf-slot     { display: flex; align-items: center; gap: 5px; }
+.fi          { display: inline-block; width: 18px; height: 18px; flex-shrink: 0; }
+.cdot        { display: inline-block; width: 13px; height: 13px; flex-shrink: 0; }
+.hbadge      { font-size: 22px; min-width: 40px; line-height: 1; }
+.hud-r       { display: flex; flex-direction: column; align-items: flex-end; min-width: 130px; }
+.hud-time-lbl { font-size: 22px; color: #AAAAAA; line-height: 1; }
+.hud-timer   { font-size: 42px; line-height: 1; }
+.hud-bag     { font-size: 24px; color: #FFFF55; line-height: 1; }
+
+/* ── Tutorial popup ────────────────────────────────────────────────── */
+.ui-popup-wrap {
+  position: absolute;
+  inset: 0 0 120px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.72);
+}
+.ui-popup {
+  background: #000000;
+  border-top: 6px solid #55FFFF;
+  border-bottom: 6px solid #55FFFF;
+  border-left: 4px solid #55FFFF;
+  border-right: 4px solid #55FFFF;
+  padding: 22px 28px;
+  max-width: 880px;
+  width: 92%;
+  max-height: 440px;
+  overflow: hidden;
+}
+
+/* ── Result screen ─────────────────────────────────────────────────── */
+.ui-result {
+  position: absolute;
+  inset: 0;
+  background: #000000;
+  padding: 14px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.res-title  { font-size: 46px; text-align: center; line-height: 1.1; }
+.ui-hr      { border: none; border-top: 1px solid #555555; margin: 8px 0; }
+.res-files  { display: flex; flex-direction: column; gap: 3px; }
+.res-row    { font-size: 28px; display: flex; gap: 18px; align-items: baseline; }
+.res-msgs   { display: flex; flex-direction: column; gap: 2px; }
+.res-msg    { font-size: 26px; line-height: 1.15; }
+.res-prompt { font-size: 26px; color: #55FFFF; text-align: center; margin-top: auto; padding-top: 8px; }
+
+/* ── Victory screen ────────────────────────────────────────────────── */
+.ui-victory {
+  position: absolute;
+  inset: 0;
+  background: #0000AA;
+  padding: 18px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+.v-title    { font-size: 52px; color: #FFFF55; line-height: 1; }
+.v-sub      { font-size: 30px; color: #55FF55; }
+.v-rule-hdr { font-size: 34px; color: #55FFFF; margin-top: 8px; }
+.v-rule     { font-size: 28px; color: #FFFFFF; }
+.v-score    { font-size: 36px; color: #FFFF55; margin-top: 8px; }
+.v-prompt   { font-size: 26px; color: #55FF55; margin-top: auto; }
+
+/* ── Controls bar below screen ─────────────────────────────────────── */
 #controls {
   margin-top: 10px;
   display: flex;
-  gap: 20px;
-  color: #555555;
-  font-size: 8px;
-  font-family: 'Press Start 2P', monospace;
+  gap: 24px;
+  color: #AAAAAA;
+  font-size: 22px;
+  font-family: 'VT323', monospace;
+  font-weight: 400;
 }

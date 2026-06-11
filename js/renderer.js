@@ -35,15 +35,15 @@ const R = (() => {
   function r(x,y,w,h,c) { ctx.fillStyle=c; ctx.fillRect(Math.round(x),Math.round(y),w,h); }
   function clear(c=EGA.BLACK) { r(0,0,CW,CH,c); }
 
-  function txt(s,x,y,c=EGA.WHITE,sz=5) {
+  function txt(s,x,y,c=EGA.WHITE,sz=10) {
     ctx.fillStyle=c;
-    ctx.font=`${sz}px 'Press Start 2P', monospace`;
+    ctx.font=`${sz}px 'VT323', monospace`;
     ctx.fillText(s, Math.round(x), Math.round(y));
   }
 
-  function txtCenter(s,y,c=EGA.WHITE,sz=5) {
+  function txtCenter(s,y,c=EGA.WHITE,sz=10) {
     ctx.fillStyle=c;
-    ctx.font=`${sz}px 'Press Start 2P', monospace`;
+    ctx.font=`${sz}px 'VT323', monospace`;
     const w = ctx.measureText(s).width;
     ctx.fillText(s, Math.round((CW-w)/2), Math.round(y));
   }
@@ -148,7 +148,7 @@ const R = (() => {
   // Storage nodes
   function node(type, sx, sy, backedUp, nearPlayer) {
     sx=Math.round(sx); sy=Math.round(sy);
-    if(nearPlayer) txt('[Z]', sx, sy-5, EGA.BRIGHT_YELLOW, 4);
+    if(nearPlayer) txt('[Z]', sx, sy-3, EGA.BRIGHT_YELLOW, 9);
     switch(type) {
       case 'hdd': {
         r(sx,sy,16,14, EGA.LIGHT_GRAY);
@@ -157,7 +157,7 @@ const R = (() => {
         else         { r(sx+6,sy+5,4,2,EGA.DARK_GRAY); }
         r(sx+5,sy+14,6,2, EGA.DARK_GRAY);
         r(sx+3,sy+15,10,2, EGA.DARK_GRAY);
-        txt('HDD', sx-1, sy+21, EGA.LIGHT_GRAY, 4);
+        txt('HDD', sx-1, sy+23, EGA.LIGHT_GRAY, 7);
         break;
       }
       case 'external': {
@@ -165,7 +165,7 @@ const R = (() => {
         r(sx+1,sy+1,20,8, backedUp?EGA.DARK_GREEN:EGA.DARK_GRAY);
         r(sx+8,sy+3,6,2, backedUp?EGA.BRIGHT_GREEN:EGA.DARK_RED);
         r(sx+18,sy+3,3,4, EGA.DARK_GRAY);
-        txt('EXT', sx+1, sy+15, EGA.LIGHT_GRAY, 4);
+        txt('EXT', sx+1, sy+17, EGA.LIGHT_GRAY, 7);
         break;
       }
       case 'cloud': {
@@ -175,7 +175,7 @@ const R = (() => {
         r(sx+8,sy+2,10,8, c);
         r(sx+16,sy+4,8,6, c);
         if(backedUp) r(sx+8,sy+6,8,3, EGA.DARK_GREEN);
-        txt('CLOUD', sx-2, sy+18, backedUp?EGA.BRIGHT_GREEN:EGA.WHITE, 4);
+        txt('CLOUD', sx-2, sy+20, backedUp?EGA.BRIGHT_GREEN:EGA.WHITE, 7);
         break;
       }
       case 'usb': {
@@ -183,7 +183,7 @@ const R = (() => {
         r(sx+1,sy+1,6,14, backedUp?EGA.DARK_GREEN:EGA.DARK_GRAY);
         r(sx+2,sy+13,4,5, EGA.LIGHT_GRAY);
         if(backedUp) r(sx+2,sy+5,4,6, EGA.BRIGHT_GREEN);
-        txt('USB', sx-2, sy+22, EGA.LIGHT_GRAY, 4);
+        txt('USB', sx-2, sy+24, EGA.LIGHT_GRAY, 7);
         break;
       }
     }
@@ -195,7 +195,7 @@ const R = (() => {
     // Draw as charred/grey version
     r(sx,sy,24,18, EGA.DARK_GRAY);
     r(sx+2,sy+2,20,14, EGA.BLACK);
-    txt('X', sx+8, sy+12, EGA.BRIGHT_RED, 6);
+    txt('X', sx+6, sy+14, EGA.BRIGHT_RED, 12);
   }
 
   // Enemy sprites
@@ -224,34 +224,6 @@ const R = (() => {
     ctx.globalAlpha = 1;
   }
 
-  // Popup overlay panel
-  function popup(lines, headerColor=EGA.BRIGHT_CYAN) {
-    r(10,20,300,160, EGA.BLACK);
-    r(10,20,300,3, headerColor);
-    r(10,177,300,3, headerColor);
-    r(10,20,3,160, headerColor);
-    r(307,20,3,160, headerColor);
-    let y = 40;
-    lines.forEach(({text:t, color:c=EGA.WHITE, size:sz=5}) => {
-      if(t==='') { y+=8; return; }
-      const words = t.split(' ');
-      let line = '';
-      ctx.font=`${sz}px 'Press Start 2P', monospace`;
-      words.forEach(w => {
-        const test = line ? line+' '+w : w;
-        if(ctx.measureText(test).width > 276) {
-          txt(line, 20, y, c, sz);
-          y += sz+5;
-          line = w;
-        } else {
-          line = test;
-        }
-      });
-      if(line) { txt(line, 20, y, c, sz); y+=sz+5; }
-      y+=2;
-    });
-  }
-
   function getCtx() { return ctx; }
-  return { init, r, clear, txt, txtCenter, tileMap, sky, player, dataFile, node, deadNode, enemy, flash, popup, getCtx };
+  return { init, r, clear, txt, txtCenter, tileMap, sky, player, dataFile, node, deadNode, enemy, flash, getCtx };
 })();

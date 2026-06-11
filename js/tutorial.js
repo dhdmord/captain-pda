@@ -1,9 +1,10 @@
 class TutorialSystem {
   constructor(messages) {
-    this.messages = messages;
-    this.queue    = [];
-    this.current  = null;
-    this._prevEnter = false;
+    this.messages    = messages;
+    this.queue       = [];
+    this.current     = null;
+    this._lastDrawn  = null;
+    this._prevEnter  = false;
   }
 
   trigger(triggerName) {
@@ -14,6 +15,10 @@ class TutorialSystem {
 
   _next() {
     this.current = this.queue.shift() || null;
+    if(!this.current) {
+      UI.clearScreen();
+      this._lastDrawn = null;
+    }
   }
 
   isActive() { return this.current !== null; }
@@ -28,6 +33,9 @@ class TutorialSystem {
 
   draw() {
     if(!this.current) return;
-    R.popup(this.current.lines, EGA.BRIGHT_CYAN);
+    if(this.current !== this._lastDrawn) {
+      UI.setTutorial(this.current.lines);
+      this._lastDrawn = this.current;
+    }
   }
 }
